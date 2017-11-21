@@ -1,0 +1,16 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+
+.main {
+  text-align: center;
+  max-height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center; }
+  .main .big {
+    font-size: 2em; }
+  .main img {
+    width: 80%; }
+
+/*# sourceMappingURL=style.css.map */
