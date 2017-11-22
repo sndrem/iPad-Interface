@@ -5,9 +5,7 @@ const moment 	= require("moment");
 
 const skyssService = {
 
-	getNextBybane: function() {
-		const from = "Brann stadion, bybanestopp (Bergen)";
-		const to = "Byparken, bybanestopp (Bergen)";
+	getNextBybane: function(from, to) {
 		const now = moment();
 		const date = `${now.date()}.${now.month() + 1 > 12}.${now.year()}`;
 		const time = `${now.hours()}:${now.minute() < 10 ? '0' + now.minute() : now.minute()}`

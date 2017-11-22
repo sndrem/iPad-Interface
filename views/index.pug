@@ -1,6 +1,18 @@
 extends layout
 
 block content
+	.clock
+		p: span.clock-status
 	.main
-		p.big #{info}
-		img(src="https://i.ytimg.com/vi/75qURWCAYRs/maxresdefault.jpg" id="bigRedButton")
+
+		.left.container
+			.buttons
+			button(data-from="Brann stadion, bybanestopp (Bergen)", data-to="Byparken, bybanestopp (Bergen)", data-silent="false").btn Bybanetider til Byparken med stemme
+			button(data-from="Brann stadion, bybanestopp (Bergen)", data-to="Byparken, bybanestopp (Bergen)", data-silent="true").btn Bybanetider til Byparken uten stemme
+			button(data-from="Brann stadion, bybanestopp (Bergen)", data-to="Bergen lufthavn Flesland (Bergen)", data-silent="false").btn Bybanetider til Flesland med stemme
+			button(data-from="Brann stadion, bybanestopp (Bergen)", data-to="Bergen lufthavn Flesland (Bergen)", data-silent="true").btn Bybanetider til Flesland uten stemme
+		.right.container
+			h4.status
+			.time-table
+
+

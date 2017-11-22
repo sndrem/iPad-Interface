@@ -1,16 +1,67 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  background: #d2492a; }
+
+img {
+  width: 100%; }
 
 .main {
-  text-align: center;
+  margin: 0px 10px;
   max-height: 100vh;
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center; }
+  flex-direction: row;
+  justify-content: center; }
   .main .big {
     font-size: 2em; }
-  .main img {
-    width: 80%; }
+
+.clock {
+  display: flex;
+  justify-content: center; }
+  .clock .clock-status {
+    color: white;
+    font-size: 1.5em; }
+
+.container {
+  margin: 30px 0px;
+  padding: 0px 25px; }
+
+.left {
+  flex: 2; }
+
+.right {
+  flex: 2; }
+
+.btn {
+  width: 100%;
+  margin: 10px 0px;
+  height: 50px;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  background: black;
+  font-style: bold;
+  font-size: 1.5em; }
+  .btn:hover {
+    cursor: pointer;
+    text-decoration: underline; }
+  .btn.btn-red {
+    background: red; }
+  .btn.btn-blue {
+    background: blue; }
+
+.time-table table {
+  width: 100%;
+  text-align: center; }
+  .time-table table tr.even {
+    background: lightgray; }
+
+.status {
+  font-size: 1.2em;
+  margin-top: 0; }
+
+.destination {
+  color: white; }
 
 /*# sourceMappingURL=style.css.map */
