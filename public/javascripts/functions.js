@@ -15,12 +15,14 @@ setInterval(function() {
 
 function buttonClicked() {
     console.log(this.dataset);
-    const {from, to, silent} = this.dataset;
+    const from = this.dataset.from;
+    const to this.dataset.to;
+    const silent = this.dataset.silent;
     const statusMessageElement = document.querySelector(".status");
     const params = {
-        from,
-        to,
-        silent
+        from: from,
+        to: to,
+        silent: silent
     }
 
     statusMessageElement.innerHTML = `Henter data for Bybanen<br>fra: <span class="destination">${from}</span><br>til: <span class="destination">${to}</span>`;
@@ -29,7 +31,6 @@ function buttonClicked() {
     skyssRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const data = JSON.parse(this.response);
-            console.log(data);
             statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${from}</span><br>til: <span class="destination">${to}</span>`;
             document.querySelector(".time-table").innerHTML = `<table>
                 <thead>
