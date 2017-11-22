@@ -42,7 +42,6 @@ function buttonClicked() {
                     ${ data.map(function(d, i) {
                             return `<tr ${i % 2 === 0 ? 'class="even"' : ''}><td>${d.start}</td><td>${d.end}</td></tr>`;
                         }).join("")}
-                }
                 </tbody>
                 </table>`;
 
