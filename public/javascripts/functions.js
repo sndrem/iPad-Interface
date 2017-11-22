@@ -16,7 +16,7 @@ setInterval(function() {
 function buttonClicked() {
     console.log(this.dataset);
     const from = this.dataset.from;
-    const to this.dataset.to;
+    const to = this.dataset.to;
     const silent = this.dataset.silent;
     const statusMessageElement = document.querySelector(".status");
     const params = {
