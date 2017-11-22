@@ -2,6 +2,7 @@ const buttons = Array.from(document.querySelectorAll(".btn"));
 const clockStatus = document.querySelector(".clock-status");
 // buttons.forEach(btn => btn.addEventListener("click", buttonClicked));
 buttons.forEach(btn => btn.addEventListener("touchstart", buttonClicked));
+console.log(buttons);
 
 moment.locale("nb");
 setInterval(() => {
