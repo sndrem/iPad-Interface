@@ -1,17 +1,15 @@
 const buttons = Array.from(document.querySelectorAll(".btn"));
 const clockStatus = document.querySelector(".clock-status");
-// buttons.forEach(btn => btn.addEventListener("click", buttonClicked));
 buttons.forEach(function(btn) {
     btn.addEventListener("click", buttonClicked);
 });
 buttons.forEach(function(btn) {
     btn.addEventListener("touchstart", buttonClicked)
 });
-// buttons.forEach(btn btn.addEventListener("touchstart", buttonClicked));
 console.log(buttons);
 
 moment.locale("nb");
-setInterval(() => {
+setInterval(function() {
     clockStatus.innerHTML = moment().format('LLLL');
 }, 1000);
 
@@ -39,7 +37,11 @@ function buttonClicked() {
                 </thead>
 
                 <tbody>
-                    ${data.map((d,i) => `<tr ${i % 2 === 0 ? 'class="even"' : ''}><td>${d.start}</td><td>${d.end}</td></tr>`).join("")}
+
+                    ${ data.map(function(d, i) {
+                            return `<tr ${i % 2 === 0 ? 'class="even"' : ''}><td>${d.start}</td><td>${d.end}</td></tr>`;
+                        }).join("")}
+                }
                 </tbody>
                 </table>`;
 
