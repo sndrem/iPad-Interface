@@ -7,10 +7,10 @@ const skyssService = {
 
 	getNextBybane: function(from, to) {
 		const now = moment();
-		const date = `${now.date()}.${now.month() + 1 > 12}.${now.year()}`;
+		const date = `${now.date()}.${now.month() + 1}.${now.year()}`; 	// moment.month() starter på 0 for januar til 11 for desember
+																		// derfor +1
 		const time = `${now.hours()}:${now.minute() < 10 ? '0' + now.minute() : now.minute()}`
 		const skyssUrl = createSkyssUrl(from, to, date , time);
-		console.log("Fetching", skyssUrl);
 		
 		return new Promise((resolve, reject) => {
 			request.get(skyssUrl, (error, response, body) => {
@@ -34,7 +34,6 @@ const skyssService = {
 }
 
 
-// skyssService.getNextBybane().then(data => console.log(data));
 
 // date must have format: day.month.year (2017)
 // hour must have format: hour:minute
