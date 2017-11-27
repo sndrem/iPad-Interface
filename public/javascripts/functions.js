@@ -52,6 +52,7 @@ function buttonClicked(btn) {
 function getSkyssTimeTable(params) {
     if(!params || !params.from || !params.to || !params.silent) {
         throw new skyssTimeTableException("The params object needs a field for from, to, and silent");
+        return;
     }
     var skyssRequest = new XMLHttpRequest();
     skyssRequest.onreadystatechange = function() {
