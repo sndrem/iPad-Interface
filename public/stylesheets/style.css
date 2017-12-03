@@ -22,10 +22,26 @@ img {
   .clock .clock-status {
     color: white;
     font-size: 1.5em; }
+    @media screen and (max-width: 590px) {
+      .clock .clock-status {
+        font-size: 1em; } }
 
 .container {
   margin: 30px 0px;
   padding: 0px 25px; }
+  @media screen and (max-width: 590px) {
+    .container {
+      margin: 10px 0px;
+      padding: 0px 10px; } }
+
+.fa {
+  margin-left: 20px; }
+
+.fa-red {
+  color: red; }
+
+.fa-green {
+  color: green; }
 
 .left {
   flex: 2; }
@@ -50,6 +66,12 @@ img {
     background: red; }
   .btn.btn-blue {
     background: blue; }
+  .btn.infoBtn {
+    background: white;
+    color: black; }
+  @media screen and (max-width: 590px) {
+    .btn {
+      font-size: 0.8em; } }
 
 .time-table table {
   width: 100%;
@@ -60,6 +82,9 @@ img {
 .status {
   font-size: 1.2em;
   margin-top: 0; }
+  @media screen and (max-width: 590px) {
+    .status {
+      font-size: 0.8em; } }
 
 .destination {
   color: white; }

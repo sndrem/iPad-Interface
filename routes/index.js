@@ -11,12 +11,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/skyss", function(req, res, next) {
-    
-    if (req.body.from && req.body.to && req.body.silent) {
+    console.log(req.body);
+    if (req.body.from && req.body.to && req.body.silent != undefined) {
         skyss.getNextBybane(req.body.from, req.body.to).then(data => {
             const startTime = data[0].start;
             
-            if(req.body.silent === 'false') {
+            if(req.body.silent === false) {
             	const text = `Neste bybane går klokken ${startTime} fra ${req.body.from} til ${req.body.to}.`;
 	            request.get(`http://192.168.1.61:5005/sayall/${text}/nb-no/50`, (error, response, body) => {
 	            });
