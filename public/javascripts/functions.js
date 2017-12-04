@@ -1,18 +1,18 @@
-const buttons = Array.from(document.querySelectorAll(".timeTableBtn"));
+var buttons = Array.from(document.querySelectorAll(".timeTableBtn"));
 var soundBtn = document.getElementById("soundBtnOnOff");
-const clockStatus = document.querySelector(".clock-status");
-const statusMessageElement = document.querySelector(".status");
+var clockStatus = document.querySelector(".clock-status");
+var statusMessageElement = document.querySelector(".status");
 
-let dataFetchInterval = null;
+var dataFetchInterval = null;
 
-let silentTTS = false;
+var silentTTS = false;
 if(window.localStorage.getItem("sound")) {
     silentTTS = JSON.parse(window.localStorage.getItem("sound"));
 }
 
 updateSoundButton(soundBtn);
 
-const config = {
+var config = {
     DATA_FETCH_RATE: 20000
 }
 
@@ -42,10 +42,10 @@ function startGettingData() {
 }
 
 function buttonClicked(btn) {
-    const from = btn.dataset.from;
-    const to = btn.dataset.to;
+    var from = btn.dataset.from;
+    var to = btn.dataset.to;
     
-    const params = {
+    var params = {
         from: from,
         to: to,
         silent: silentTTS
@@ -75,7 +75,7 @@ function toggleSound() {
 }
 
 function updateSoundButton(btn) {
-    const statusIcon = document.createElement("i");
+    var statusIcon = document.createElement("i");
     statusIcon.classList.add("fa");
     if(silentTTS) {
         statusIcon.classList.add("fa-volume-up", "fa-green");
@@ -101,7 +101,7 @@ function getSkyssTimeTable(params) {
     var skyssRequest = new XMLHttpRequest();
     skyssRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            const data = JSON.parse(this.response);
+            var data = JSON.parse(this.response);
             statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
             document.querySelector(".time-table").innerHTML = `<table>
                 <thead>
