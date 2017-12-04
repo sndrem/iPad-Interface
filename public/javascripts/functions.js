@@ -1,5 +1,5 @@
 const buttons = Array.from(document.querySelectorAll(".timeTableBtn"));
-const soundBtn = document.getElementById("soundBtn");
+var soundBtn = document.getElementById("soundBtnOnOff");
 const clockStatus = document.querySelector(".clock-status");
 const statusMessageElement = document.querySelector(".status");
 
