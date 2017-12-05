@@ -2,12 +2,17 @@ var express = require('express');
 var router = express.Router();
 var skyss = require("../tools/skyss.js");
 var request = require("request");
+var yrService = require("../tools/yr.js");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.render('index', {
         title: 'Bybanetider'
     });
+});
+
+router.get("/rainData", yrService.getPrecication, function(req, res, next) {
+    res.send(res.myData.weather);
 });
 
 router.post("/skyss", function(req, res, next) {

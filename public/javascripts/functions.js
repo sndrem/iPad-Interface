@@ -129,3 +129,55 @@ function skyssTimeTableException(message) {
         return message;
     }
 }
+
+function fetchRainData() {
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", function() {
+        var data = JSON.parse(this.responseText);
+        // console.log(data);
+        drawChart(data);
+    });
+    xhr.open("GET", "/rainData");
+    xhr.send();
+}
+
+function formatTimeOfDay(rainDate) {
+    var date = new Date(rainDate);
+    // console.log(date.getHo);
+    return [date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()];
+}
+
+function drawChart(rainData) {
+    var rainData = rainData.product.time;
+    google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var dataArray = [];
+        rainData.forEach((r, i) => {
+            dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
+        })
+        // console.log("Rain data for google", dataArray);
+        console.log(dataArray);
+        var data = new google.visualization.DataTable();
+        data.addColumn("timeofday", "Tid på dagen");
+        data.addColumn("number", "MM/H");
+
+        data.addRows(dataArray);
+
+        console.log(data);
+
+        var options = {
+          chart: {
+            title: 'Blir det regn neste 1,5 time?',
+            subtitle: 'Data fra Yr.no',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('weatherChart'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+}
+fetchRainData();
+// drawChart();
