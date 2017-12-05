@@ -154,7 +154,7 @@ function drawChart(rainData) {
 
       function drawChart() {
         var dataArray = [];
-        rainData.forEach((r, i) => {
+        rainData.forEach(function(r, i) {
             dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
         })
         // console.log("Rain data for google", dataArray);
