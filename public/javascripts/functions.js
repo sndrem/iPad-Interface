@@ -158,14 +158,12 @@ function drawChart(rainData) {
             dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
         })
         // console.log("Rain data for google", dataArray);
-        console.log(dataArray);
         var data = new google.visualization.DataTable();
         data.addColumn("timeofday", "Tid på dagen");
         data.addColumn("number", "MM/H");
+     
 
         data.addRows(dataArray);
-
-        console.log(data);
 
         var options = {
           chart: {
