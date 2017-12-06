@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "jasmine"
+    "test": "jasmine",
+    "babel-node": "babel-node --presets=/*a*/ --ignore='foo|bar|baz'"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -20,5 +21,9 @@
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5",
     "xml2json": "^0.11.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   }
 }
