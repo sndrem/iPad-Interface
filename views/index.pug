@@ -1,23 +1,26 @@
 extends layout
 
 block content
-	.clock
-		p: span.clock-status
-	.main
+	.container
+		.clock
+			p: span.clock-status
+		.row
+			.col-sm-12.col-md-4
+				
+				button.btn.infoBtn#soundBtnOnOff Lyd på
+					i.fa.fa-volume-up.fa-green
+				.buttons
+					button(onclick="", data-from="Brann stadion, bybanestopp (Bergen)", data-to="Byparken, bybanestopp (Bergen)", data-silent="false").btn.timeTableBtn Bybanetider til Byparken 
 
-		.left.container
-			button.btn.infoBtn#soundBtnOnOff Lyd på
-				i.fa.fa-volume-up.fa-green
-			.buttons
-				button(onclick="", data-from="Brann stadion, bybanestopp (Bergen)", data-to="Byparken, bybanestopp (Bergen)", data-silent="false").btn.timeTableBtn Bybanetider til Byparken 
+					button(onclick="", data-from="Brann stadion, bybanestopp (Bergen)", data-to="Bergen lufthavn Flesland (Bergen)", data-silent="false").btn.timeTableBtn Bybanetider til Flesland
 
-				button(onclick="", data-from="Brann stadion, bybanestopp (Bergen)", data-to="Bergen lufthavn Flesland (Bergen)", data-silent="false").btn.timeTableBtn Bybanetider til Flesland
-
-			.weather
-				div#weatherChart
-
-		.right.container
-			h4.status
-			.time-table
+				
+			.col-sm-12.col-md-8
+				h4.status
+				.time-table
+		.row
+			.col-sm-12.col-md-12
+				.weather
+					div#weatherChart
 
 

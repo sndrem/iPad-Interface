@@ -5,6 +5,7 @@ var statusMessageElement = document.querySelector(".status");
 
 var dataFetchInterval = null;
 
+
 var silentTTS = false;
 if(window.localStorage.getItem("sound")) {
     silentTTS = JSON.parse(window.localStorage.getItem("sound"));
@@ -34,7 +35,6 @@ setInterval(function() {
 
 function startGettingData() {
     if(dataFetchInterval) {
-        console.log("Clearing fetch interval");
         clearInterval(dataFetchInterval);
     }
 
@@ -50,7 +50,6 @@ function buttonClicked(btn) {
         to: to,
         silent: silentTTS
     }
-
 
     statusMessageElement.innerHTML = `Henter data for Bybanen<br>fra: <span class="destination">${from}</span><br>til: <span class="destination">${to}</span>`;
     getSkyssTimeTable(params);
@@ -103,7 +102,7 @@ function getSkyssTimeTable(params) {
         if (this.readyState == 4 && this.status == 200) {
             var data = JSON.parse(this.response);
             statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
-            document.querySelector(".time-table").innerHTML = `<table>
+            document.querySelector(".time-table").innerHTML = `<table class="table table-striped">
                 <thead>
                     <tr><th>Start</th><th>Slutt</th></tr>
                 </thead>
@@ -111,7 +110,7 @@ function getSkyssTimeTable(params) {
                 <tbody>
 
                     ${ data.map(function(d, i) {
-                            return `<tr ${i % 2 === 0 ? 'class="even"' : ''}><td>${d.start}</td><td>${d.end}</td></tr>`;
+                            return `<tr><td>${d.start}</td><td>${d.end}</td></tr>`;
                         }).join("")}
                 </tbody>
                 </table>`;
@@ -134,7 +133,6 @@ function fetchRainData() {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", function() {
         var data = JSON.parse(this.responseText);
-        // console.log(data);
         drawChart(data);
     });
     xhr.open("GET", "/rainData");
@@ -142,33 +140,69 @@ function fetchRainData() {
 }
 
 function formatTimeOfDay(rainDate) {
-    var date = new Date(rainDate);
-    // console.log(date.getHo);
-    return [date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()];
+    var date = moment.tz(rainDate, moment.ISO_8601, "Europe/Oslo");
+    return [date.hour() - 1, date.minute(), date.second()];
 }
 
 function drawChart(rainData) {
     var rainData = rainData.product.time;
     google.charts.load('current', {'packages':['bar']});
       google.charts.setOnLoadCallback(drawChart);
-
+      
       function drawChart() {
         var dataArray = [];
         rainData.forEach(function(r, i) {
             dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
+            // dataArray.push([formatTimeOfDay(r.from), parseFloat(Math.random(0, 100) * 100)])
         })
-        // console.log("Rain data for google", dataArray);
+        // 
         var data = new google.visualization.DataTable();
         data.addColumn("timeofday", "Tid på dagen");
         data.addColumn("number", "MM/H");
      
-
+        
         data.addRows(dataArray);
 
+
         var options = {
+          backgroundColor: '#d2492a',  
           chart: {
             title: 'Blir det regn neste 1,5 time?',
             subtitle: 'Data fra Yr.no',
+          },
+          vAxis: {
+            title: "mm nedbør",
+            textStyle: {
+                color: 'white',
+                fontSize: 14,
+                bold: true
+            }
+          },
+          hAxis: {
+            titleTextStyle: {
+                color: 'white',
+                fontSize: 14,
+                bold: true
+            },
+            textStyle: {
+                color: 'white',
+                fontSize: 14,
+                bold: true
+            },
+            gridLines: {
+                color: '#fff'
+            }
+          },
+          titleTextStyle: {
+            color: 'white',
+            fontSize: 20,
+            bold: true
+          },
+          legend: {
+            textStyle: {
+                color: 'white',
+                fontSize: 18
+            }
           }
         };
 

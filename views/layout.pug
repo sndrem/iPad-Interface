@@ -2,6 +2,7 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     meta(name="viewport" content="width=device-width, initial-scale=1")
   body
@@ -9,7 +10,9 @@ html
         img(src="https://www.skyss.no/globalassets/bilder/toppbilder-desktop-og-mobil/2017/host_f_3.jpg")
     block content
 
+    //- script(type="text/javascript", src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
     script(type="text/javascript" src="https://www.gstatic.com/charts/loader.js")
     script(type='text/javascript', src="https://use.fontawesome.com/9d76212ba5.js")
-    script(type='text/javascript', src="javascripts/libraries/momentWithLocals.js")    
+    script(type='text/javascript', src="javascripts/libraries/momentWithLocals.js")  
+    script(type='text/javascript', src="javascripts/libraries/momentTimezones.js")
     script(type='text/javascript', src="javascripts/functions.js")
