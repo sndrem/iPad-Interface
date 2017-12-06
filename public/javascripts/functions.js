@@ -154,23 +154,25 @@ function drawChart(rainData) {
 
       function drawChart() {
         var dataArray = [];
-        rainData.forEach((r, i) => {
+        rainData.forEach(function(r, i) {
             dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
         })
         // console.log("Rain data for google", dataArray);
-        console.log(dataArray);
         var data = new google.visualization.DataTable();
         data.addColumn("timeofday", "Tid på dagen");
         data.addColumn("number", "MM/H");
+     
 
         data.addRows(dataArray);
-
-        console.log(data);
 
         var options = {
           chart: {
             title: 'Blir det regn neste 1,5 time?',
             subtitle: 'Data fra Yr.no',
+          },
+          vAxis: {
+            ticks: [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 20.0],
+            title: "mm nedbør"
           }
         };
 
