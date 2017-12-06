@@ -1,12 +1,12 @@
 extends layout
 
 block content
-	.clock
-		p: span.clock-status
-	.main
-
-		.flex-box
-			.left.container
+	.container
+		.clock
+			p: span.clock-status
+		.row
+			.col-sm-12.col-md-4
+				
 				button.btn.infoBtn#soundBtnOnOff Lyd på
 					i.fa.fa-volume-up.fa-green
 				.buttons
@@ -14,14 +14,13 @@ block content
 
 					button(onclick="", data-from="Brann stadion, bybanestopp (Bergen)", data-to="Bergen lufthavn Flesland (Bergen)", data-silent="false").btn.timeTableBtn Bybanetider til Flesland
 
-			
-
-			.right.container
+				
+			.col-sm-12.col-md-8
 				h4.status
 				.time-table
-
 		.row
-			.weather
-				div#weatherChart
+			.col-sm-12.col-md-12
+				.weather
+					div#weatherChart
 
 
