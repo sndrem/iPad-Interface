@@ -7,14 +7,15 @@ var dataFetchInterval = null;
 
 
 var silentTTS = false;
-if(window.localStorage.getItem("sound")) {
+if (window.localStorage.getItem("sound")) {
     silentTTS = JSON.parse(window.localStorage.getItem("sound"));
 }
 
 updateSoundButton(soundBtn);
 
 var config = {
-    DATA_FETCH_RATE: 20000
+    SKYSS_DATA_FETCH_RATE: 20000,
+    YR_DATA_FETCH_RATE: 60000
 }
 
 buttons.forEach(function(btn) {
@@ -34,7 +35,7 @@ setInterval(function() {
 }, 1000);
 
 function startGettingData() {
-    if(dataFetchInterval) {
+    if (dataFetchInterval) {
         clearInterval(dataFetchInterval);
     }
 
@@ -44,7 +45,7 @@ function startGettingData() {
 function buttonClicked(btn) {
     var from = btn.dataset.from;
     var to = btn.dataset.to;
-    
+
     var params = {
         from: from,
         to: to,
@@ -53,15 +54,17 @@ function buttonClicked(btn) {
 
     statusMessageElement.innerHTML = `Henter data for Bybanen<br>fra: <span class="destination">${from}</span><br>til: <span class="destination">${to}</span>`;
     getSkyssTimeTable(params);
+
     return setInterval(function() {
+        params.silent = true;
         getSkyssTimeTable(params);
-    }, config.DATA_FETCH_RATE);
+    }, config.SKYSS_DATA_FETCH_RATE);
 }
 
 function saveToLocalStorage(key, value) {
-    if(!key) {
+    if (!key) {
         throw new Error("Key cannot be empty");
-    } else if(!value) {
+    } else if (!value) {
         throw new Error("Value cannot be empty");
     }
 
@@ -76,7 +79,7 @@ function toggleSound() {
 function updateSoundButton(btn) {
     var statusIcon = document.createElement("i");
     statusIcon.classList.add("fa");
-    if(silentTTS) {
+    if (silentTTS) {
         statusIcon.classList.add("fa-volume-up", "fa-green");
         statusIcon.classList.remove("fa-volume-off", "fa-red");
         btn.innerHTML = "Lyd på";
@@ -92,17 +95,17 @@ function updateSoundButton(btn) {
 }
 
 function getSkyssTimeTable(params) {
-    if(!params || !params.from || !params.to) {
+    if (!params || !params.from || !params.to) {
         throw new skyssTimeTableException("The params object needs a field for from, to, and silent");
         return;
     }
 
     var skyssRequest = new XMLHttpRequest();
     skyssRequest.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var data = JSON.parse(this.response);
-            statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
-            document.querySelector(".time-table").innerHTML = `<table class="table table-striped">
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.response);
+                statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
+                document.querySelector(".time-table").innerHTML = `<table class="table table-striped">
                 <thead>
                     <tr><th>Start</th><th>Slutt</th></tr>
                 </thead>
@@ -130,13 +133,25 @@ function skyssTimeTableException(message) {
 }
 
 function fetchRainData() {
+    console.log("Fetching rain data");
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", function() {
         var data = JSON.parse(this.responseText);
-        drawChart(data);
+        var dataArray = formatRainData(data.product.time);
+        drawChart(dataArray);
     });
     xhr.open("GET", "/rainData");
     xhr.send();
+}
+
+function formatRainData(data) {
+    if(data.length === 0) {
+        throw new Error("No rain data present to format");
+    }
+
+    return data.map(function(r) {
+        return [formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)];
+    });
 }
 
 function formatTimeOfDay(rainDate) {
@@ -145,25 +160,25 @@ function formatTimeOfDay(rainDate) {
 }
 
 function drawChart(rainData) {
-    var rainData = rainData.product.time;
+    
     google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawChart);
       
       function drawChart() {
-        var dataArray = [];
-        rainData.forEach(function(r, i) {
-            dataArray.push([formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)])
-            // dataArray.push([formatTimeOfDay(r.from), parseFloat(Math.random(0, 100) * 100)])
-        })
-        // 
+        
         var data = new google.visualization.DataTable();
         data.addColumn("timeofday", "Tid på dagen");
         data.addColumn("number", "MM/H");
      
         
-        data.addRows(dataArray);
+        data.addRows(rainData);
 
 
+        var textOptions = {
+                color: 'white',
+                fontSize: 14,
+                bold: true
+            }
         var options = {
           backgroundColor: '#d2492a',  
           chart: {
@@ -179,16 +194,8 @@ function drawChart(rainData) {
             }
           },
           hAxis: {
-            titleTextStyle: {
-                color: 'white',
-                fontSize: 14,
-                bold: true
-            },
-            textStyle: {
-                color: 'white',
-                fontSize: 14,
-                bold: true
-            },
+            titleTextStyle: textOptions,
+            textStyle: textOptions,
             gridLines: {
                 color: '#fff'
             }
@@ -203,13 +210,23 @@ function drawChart(rainData) {
                 color: 'white',
                 fontSize: 18
             }
+          },
+          animation: {
+            startup: true,
+            easing: 'linear',
+            duration: 5000
           }
         };
+
+
 
         var chart = new google.charts.Bar(document.getElementById('weatherChart'));
 
         chart.draw(data, google.charts.Bar.convertOptions(options));
+
       }
 }
+
 fetchRainData();
-// drawChart();
+
+// setInterval(fetchRainData, 5000);
