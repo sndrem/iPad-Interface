@@ -24,21 +24,23 @@ function getSkyssTimeTable(params) {
     throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
   }
 
-  var skyssRequest = new XMLHttpRequest();
-
-  skyssRequest.onreadystatechange = function dataReady() {
-    if (this.readyState === 4 && this.status === 200) {
-      var data = JSON.parse(this.response);
-      statusMessageElement.innerHTML = "Neste avganger<br>fra: <span class=\"destination\">".concat(params.from, "</span><br>til: <span class=\"destination\">").concat(params.to, "</span>");
-      document.querySelector('.time-table').innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
-        return "<tr><td>".concat(d.start, "</td><td>").concat(d.end, "</td></tr>");
-      }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</table>");
-    }
-  };
-
-  skyssRequest.open('POST', '/skyss', true);
-  skyssRequest.setRequestHeader('Content-type', 'application/json');
-  skyssRequest.send(JSON.stringify(params));
+  fetch('/skyss', {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(function (data) {
+    return data.json();
+  }).then(function (timeTableData) {
+    var data = timeTableData;
+    statusMessageElement.innerHTML = "Neste avganger<br>fra: <span class=\"destination\">".concat(params.from, "</span><br>til: <span class=\"destination\">").concat(params.to, "</span>");
+    document.querySelector('.time-table').innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
+      return "<tr><td>".concat(d.start, "</td><td>").concat(d.end, "</td></tr>");
+    }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</table>");
+  }).catch(function (error) {
+    console.warn(error);
+  });
 }
 
 function buttonClicked(btn) {
@@ -202,10 +204,9 @@ function itWontRain() {
 }
 
 function fetchRainData() {
-  var xhr = new XMLHttpRequest();
-  xhr.addEventListener('load', function dataLoaded() {
-    var data = JSON.parse(this.responseText);
-
+  fetch('/rainData').then(function (data) {
+    return data.json();
+  }).then(function (data) {
     if (itWillRain(data)) {
       var dataArray = formatRainData(data.product.time);
       drawWeatherChart(dataArray);
@@ -213,8 +214,6 @@ function fetchRainData() {
       itWontRain();
     }
   });
-  xhr.open('GET', '/rainData');
-  xhr.send();
 }
 
 fetchRainData(); // setInterval(fetchRainData, 5000);

@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
     "test": "jasmine",
-    "babel": "babel public/javascripts/functions.js --out-file ./public/javascripts/compiled_js/compiled_functions.js",
+    "babel": "babel --watch public/javascripts/functions.js --out-file ./public/javascripts/compiled_js/compiled_functions.js",
     "babel-node": "babel-node --presets=env --ignore=node_modules"
   },
   "dependencies": {

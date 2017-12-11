@@ -26,11 +26,15 @@ function getSkyssTimeTable(params) {
 	if (!params || !params.from || !params.to) {
 		throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
 	}
-
-	const skyssRequest = new XMLHttpRequest();
-	skyssRequest.onreadystatechange = function dataReady() {
-		if (this.readyState === 4 && this.status === 200) {
-			const data = JSON.parse(this.response);
+	fetch('/skyss', {
+		method: 'POST',
+		body: JSON.stringify(params),
+		headers: new Headers({
+			'Content-Type': 'application/json'
+		})
+	}).then(data => data.json())
+		.then((timeTableData) => {
+			const data = timeTableData;
 			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
 			document.querySelector('.time-table').innerHTML = `<table class="table table-striped">
 																	<thead>
@@ -42,11 +46,9 @@ function getSkyssTimeTable(params) {
 																		${data.map(d => `<tr><td>${d.start}</td><td>${d.end}</td></tr>`).join('')}
 																	</tbody>
 																	</table>`;
-		}
-	};
-	skyssRequest.open('POST', '/skyss', true);
-	skyssRequest.setRequestHeader('Content-type', 'application/json');
-	skyssRequest.send(JSON.stringify(params));
+		}).catch((error) => {
+			console.warn(error);
+		});
 }
 
 function buttonClicked(btn) {
@@ -214,18 +216,16 @@ function itWontRain() {
 
 
 function fetchRainData() {
-	const xhr = new XMLHttpRequest();
-	xhr.addEventListener('load', function dataLoaded() {
-		const data = JSON.parse(this.responseText);
-		if (itWillRain(data)) {
-			const dataArray = formatRainData(data.product.time);
-			drawWeatherChart(dataArray);
-		} else {
-			itWontRain();
-		}
-	});
-	xhr.open('GET', '/rainData');
-	xhr.send();
+	fetch('/rainData')
+		.then(data => data.json())
+		.then((data) => {
+			if (itWillRain(data)) {
+				const dataArray = formatRainData(data.product.time);
+				drawWeatherChart(dataArray);
+			} else {
+				itWontRain();
+			}
+		});
 }
 
 fetchRainData();

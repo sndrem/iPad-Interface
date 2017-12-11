@@ -16,6 +16,7 @@ router.get("/rainData", yrService.getPrecication, function(req, res, next) {
 });
 
 router.post("/skyss", function(req, res, next) {
+    console.log(req.body);
     if (req.body.from && req.body.to && req.body.silent != undefined) {
         skyss.getNextBybane(req.body.from, req.body.to).then(data => {
             const startTime = data[0].start;

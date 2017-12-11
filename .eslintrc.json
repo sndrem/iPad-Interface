@@ -30,6 +30,7 @@
         "comma-dangle": 0,
         "space-before-function-paren": 0,
         "no-unused-vars": 1,
-        "func-names": 1
+        "func-names": 1,
+        "no-console": 1
     }
 }
