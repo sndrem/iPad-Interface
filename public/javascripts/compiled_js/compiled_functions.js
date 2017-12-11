@@ -14,9 +14,9 @@ if (window.localStorage.getItem('sound')) {
 }
 
 function buttonClicked(btn) {
-  var _btn$dataset$from = btn.dataset.from,
-      to = _btn$dataset$from.to,
-      from = _btn$dataset$from.from;
+  var _btn$dataset = btn.dataset,
+      to = _btn$dataset.to,
+      from = _btn$dataset.from;
   var params = {
     from: from,
     to: to,

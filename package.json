@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon ./bin/www",
     "test": "jasmine",
     "babel": "babel public/javascripts/functions.js --watch --out-file public/javascripts/compiled_js/compiled_functions.js",
     "eslint": "eslint public/javascripts/functions.js"

@@ -16,14 +16,13 @@ if (window.localStorage.getItem('sound')) {
 }
 
 function buttonClicked(btn) {
-	const { to, from } = btn.dataset.from;
+	const { to, from } = btn.dataset;
 
 	const params = {
 		from,
 		to,
 		silent: silentTTS,
 	};
-
 	statusMessageElement.innerHTML = `Henter data for Bybanen<br>fra: <span class="destination">${from}</span><br>til: <span class="destination">${to}</span>`;
 	getSkyssTimeTable(params);
 
