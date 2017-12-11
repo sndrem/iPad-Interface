@@ -1,11 +1,11 @@
-var buttons = Array.from(document.querySelectorAll('.timeTableBtn'));
-var soundBtn = document.getElementById('soundBtnOnOff');
-var clockStatus = document.querySelector('.clock-status');
-var statusMessageElement = document.querySelector('.status');
+const buttons = Array.from(document.querySelectorAll('.timeTableBtn'));
+const soundBtn = document.getElementById('soundBtnOnOff');
+const clockStatus = document.querySelector('.clock-status');
+const statusMessageElement = document.querySelector('.status');
 
 let dataFetchInterval = null;
 
-var config = {
+const config = {
 	SKYSS_DATA_FETCH_RATE: 20000,
 	YR_DATA_FETCH_RATE: 60000,
 };
@@ -16,10 +16,9 @@ if (window.localStorage.getItem('sound')) {
 }
 
 function buttonClicked(btn) {
-	var from = btn.dataset.from;
-	var to = btn.dataset.to;
+	const { to, from } = btn.dataset.from;
 
-	var params = {
+	const params = {
 		from,
 		to,
 		silent: silentTTS,
@@ -54,7 +53,7 @@ function saveToLocalStorage(key, value) {
 
 
 function updateSoundButton(btn) {
-	var statusIcon = document.createElement('i');
+	const statusIcon = document.createElement('i');
 	statusIcon.classList.add('fa');
 	if (silentTTS) {
 		statusIcon.classList.add('fa-volume-up', 'fa-green');
@@ -107,10 +106,10 @@ function getSkyssTimeTable(params) {
 		throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
 	}
 
-	var skyssRequest = new XMLHttpRequest();
+	const skyssRequest = new XMLHttpRequest();
 	skyssRequest.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
-			var data = JSON.parse(this.response);
+			const data = JSON.parse(this.response);
 			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
 			document.querySelector('.time-table').innerHTML = `<table class="table table-striped">
 																	<thead>
@@ -130,7 +129,7 @@ function getSkyssTimeTable(params) {
 }
 
 function formatTimeOfDay(rainDate) {
-	var date = moment.tz(rainDate, moment.ISO_8601, 'Europe/Oslo');
+	const date = moment.tz(rainDate, moment.ISO_8601, 'Europe/Oslo');
 	return [date.hour() - 1, date.minute(), date.second()];
 }
 
@@ -139,19 +138,17 @@ function formatRainData(data) {
 		throw new Error('No rain data present to format');
 	}
 
-	return data.map(function(r) {
-		return [formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)]
-	});
+	return data.map(r => [formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)]);
 }
 
 function removeLoading() {
-	document.querySelector(".loading").remove();
+	document.querySelector('.loading').remove();
 }
 
 function drawWeatherChart(rainData) {
 	google.charts.load('current', { packages: ['bar'] });
 	function drawChart() {
-		var data = new google.visualization.DataTable();
+		const data = new google.visualization.DataTable();
 		data.addColumn('timeofday', 'Tid på dagen');
 		data.addColumn('number', 'MM/H');
 
@@ -159,13 +156,13 @@ function drawWeatherChart(rainData) {
 		data.addRows(rainData);
 
 
-		var textOptions = {
+		const textOptions = {
 			color: 'white',
 			fontSize: 14,
 			bold: true,
 		};
 
-		var options = {
+		const options = {
 			backgroundColor: '#d2492a',
 			chart: {
 				title: 'Blir det regn neste 1,5 time?',
@@ -200,32 +197,30 @@ function drawWeatherChart(rainData) {
 		};
 
 		removeLoading();
-		var chart = new google.charts.Bar(document.getElementById('weatherChart'));
+		const chart = new google.charts.Bar(document.getElementById('weatherChart'));
 		chart.draw(data, google.charts.Bar.convertOptions(options));
 	}
 	google.charts.setOnLoadCallback(drawChart);
 }
 
 function itWillRain(data) {
-	return data.product.time.every(function(r) {
-		return parseFloat(r.location.precipitation.value) !== 0.0;
-	});
+	return data.product.time.every(r => parseFloat(r.location.precipitation.value) !== 0.0);
 }
 
 function itWontRain() {
 	removeLoading();
-	var h2 = document.querySelector('h2.status');
+	const h2 = document.querySelector('h2.status');
 	h2.textContent = 'Det skal ikke regne neste 1,5 time!';
 }
 
 
 function fetchRainData() {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 	xhr.addEventListener('load', function () {
-		var data = JSON.parse(this.responseText);
-		if(itWillRain(data)) {
-			var dataArray = formatRainData(data.product.time);
-			drawWeatherChart(dataArray);	
+		const data = JSON.parse(this.responseText);
+		if (itWillRain(data)) {
+			const dataArray = formatRainData(data.product.time);
+			drawWeatherChart(dataArray);
 		} else {
 			itWontRain();
 		}

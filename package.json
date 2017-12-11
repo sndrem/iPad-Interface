@@ -5,13 +5,16 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "jasmine",
-    "babel-node": "babel-node --presets=/*a*/ --ignore='foo|bar|baz'"
+    "babel": "babel public/javascripts/functions.js --watch --out-file public/javascripts/compiled_js/compiled_functions.js",
+    "eslint": "eslint public/javascripts/functions.js"
   },
   "dependencies": {
+    "babel-preset-env": "^7.0.0-beta.3",
     "body-parser": "~1.18.2",
     "cheerio": "^1.0.0-rc.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "eslint": "^4.13.0",
     "express": "~4.15.5",
     "jasmine": "2.8.0",
     "moment": "^2.19.2",
@@ -23,9 +26,27 @@
     "xml2json": "^0.11.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "babel-cli": "^7.0.0-beta.3",
     "babel-preset-env": "^1.6.1",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.5.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions",
+              "safari >= 7"
+            ]
+          }
+        }
+      ]
+    ]
   }
 }
