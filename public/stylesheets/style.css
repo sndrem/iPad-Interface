@@ -10,6 +10,9 @@ body {
 img {
   width: 100%; }
 
+.loading {
+  width: 150px; }
+
 .clock {
   display: flex;
   justify-content: center; }

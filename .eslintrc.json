@@ -1,0 +1,34 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "airbnb",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "globals": {
+        "moment": true,
+        "google": true
+    },
+    "rules": {
+        "indent": ["error", "tab"],
+        "no-tabs": 0,
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "comma-dangle": 0,
+        "space-before-function-paren": 0,
+        "no-unused-vars": 1
+    }
+}
