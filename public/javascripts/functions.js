@@ -139,7 +139,9 @@ function formatRainData(data) {
 		throw new Error('No rain data present to format');
 	}
 
-	return data.map(r => [formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)]);
+	return data.map(function(r) {
+		return [formatTimeOfDay(r.from), parseFloat(r.location.precipitation.value)]
+	});
 }
 
 function removeLoading() {
@@ -204,8 +206,10 @@ function drawWeatherChart(rainData) {
 	google.charts.setOnLoadCallback(drawChart);
 }
 
-function willItRain(data) {
-	return data.product.time.every(r => parseFloat(r.location.precipitation.value) !== 0.0);
+function itWillRain(data) {
+	return data.product.time.every(function(r) {
+		return parseFloat(r.location.precipitation.value) !== 0.0;
+	});
 }
 
 function itWontRain() {
@@ -219,7 +223,7 @@ function fetchRainData() {
 	var xhr = new XMLHttpRequest();
 	xhr.addEventListener('load', function () {
 		var data = JSON.parse(this.responseText);
-		if(willItRain(data)) {
+		if(itWillRain(data)) {
 			var dataArray = formatRainData(data.product.time);
 			drawWeatherChart(dataArray);	
 		} else {
