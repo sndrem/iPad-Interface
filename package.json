@@ -6,12 +6,8 @@
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
     "test": "jasmine",
-    "babel": "babel public/javascripts/functions.js --out-file ./public/javascripts/compiled_js/compiled_functions.js"
-  },
-  "dependencies": {
-    "babel-cli": "^7.0.0-beta.3",
-    "babel": "babel public/javascripts/functions.js --watch --out-file public/javascripts/compiled_js/compiled_functions.js",
-    "eslint": "eslint public/javascripts/functions.js"
+    "babel": "babel public/javascripts/functions.js --out-file ./public/javascripts/compiled_js/compiled_functions.js",
+    "babel-node": "babel-node --presets=env --ignore=node_modules"
   },
   "dependencies": {
     "babel-preset-env": "^7.0.0-beta.3",
@@ -32,7 +28,7 @@
   },
   "devDependencies": {
     "babel-cli": "^7.0.0-beta.3",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^7.0.0-beta.3",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",

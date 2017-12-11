@@ -13,6 +13,34 @@ if (window.localStorage.getItem('sound')) {
   silentTTS = JSON.parse(window.localStorage.getItem('sound'));
 }
 
+function SkyssTimeTableException(message) {
+  this.toString = function toString() {
+    return message;
+  };
+}
+
+function getSkyssTimeTable(params) {
+  if (!params || !params.from || !params.to) {
+    throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
+  }
+
+  var skyssRequest = new XMLHttpRequest();
+
+  skyssRequest.onreadystatechange = function dataReady() {
+    if (this.readyState === 4 && this.status === 200) {
+      var data = JSON.parse(this.response);
+      statusMessageElement.innerHTML = "Neste avganger<br>fra: <span class=\"destination\">".concat(params.from, "</span><br>til: <span class=\"destination\">").concat(params.to, "</span>");
+      document.querySelector('.time-table').innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
+        return "<tr><td>".concat(d.start, "</td><td>").concat(d.end, "</td></tr>");
+      }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</table>");
+    }
+  };
+
+  skyssRequest.open('POST', '/skyss', true);
+  skyssRequest.setRequestHeader('Content-type', 'application/json');
+  skyssRequest.send(JSON.stringify(params));
+}
+
 function buttonClicked(btn) {
   var _btn$dataset = btn.dataset,
       to = _btn$dataset.to,
@@ -49,20 +77,21 @@ function saveToLocalStorage(key, value) {
 }
 
 function updateSoundButton(btn) {
+  var thisBtn = btn;
   var statusIcon = document.createElement('i');
   statusIcon.classList.add('fa');
 
   if (silentTTS) {
     statusIcon.classList.add('fa-volume-up', 'fa-green');
     statusIcon.classList.remove('fa-volume-off', 'fa-red');
-    btn.innerHTML = 'Lyd på';
-    btn.appendChild(statusIcon);
+    thisBtn.innerHTML = 'Lyd på';
+    thisBtn.appendChild(statusIcon);
     silentTTS = false;
   } else {
     statusIcon.classList.add('fa-volume-off', 'fa-red');
     statusIcon.classList.remove('fa-volume-up', 'fa-green');
-    btn.innerHTML = 'Lyd av';
-    btn.appendChild(statusIcon);
+    thisBtn.innerHTML = 'Lyd av';
+    thisBtn.appendChild(statusIcon);
     silentTTS = true;
   }
 }
@@ -84,34 +113,6 @@ moment.locale('nb');
 setInterval(function () {
   clockStatus.innerHTML = moment().format('LLLL');
 }, 1000);
-
-function SkyssTimeTableException(message) {
-  this.toString = function () {
-    return message;
-  };
-}
-
-function getSkyssTimeTable(params) {
-  if (!params || !params.from || !params.to) {
-    throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
-  }
-
-  var skyssRequest = new XMLHttpRequest();
-
-  skyssRequest.onreadystatechange = function () {
-    if (this.readyState === 4 && this.status === 200) {
-      var data = JSON.parse(this.response);
-      statusMessageElement.innerHTML = "Neste avganger<br>fra: <span class=\"destination\">".concat(params.from, "</span><br>til: <span class=\"destination\">").concat(params.to, "</span>");
-      document.querySelector('.time-table').innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
-        return "<tr><td>".concat(d.start, "</td><td>").concat(d.end, "</td></tr>");
-      }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</table>");
-    }
-  };
-
-  skyssRequest.open('POST', '/skyss', true);
-  skyssRequest.setRequestHeader('Content-type', 'application/json');
-  skyssRequest.send(JSON.stringify(params));
-}
 
 function formatTimeOfDay(rainDate) {
   var date = moment.tz(rainDate, moment.ISO_8601, 'Europe/Oslo');
@@ -202,7 +203,7 @@ function itWontRain() {
 
 function fetchRainData() {
   var xhr = new XMLHttpRequest();
-  xhr.addEventListener('load', function () {
+  xhr.addEventListener('load', function dataLoaded() {
     var data = JSON.parse(this.responseText);
 
     if (itWillRain(data)) {

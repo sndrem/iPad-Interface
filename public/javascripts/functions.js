@@ -10,9 +10,43 @@ const config = {
 	YR_DATA_FETCH_RATE: 60000,
 };
 
+
 let silentTTS = false;
 if (window.localStorage.getItem('sound')) {
 	silentTTS = JSON.parse(window.localStorage.getItem('sound'));
+}
+
+function SkyssTimeTableException(message) {
+	this.toString = function toString() {
+		return message;
+	};
+}
+
+function getSkyssTimeTable(params) {
+	if (!params || !params.from || !params.to) {
+		throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
+	}
+
+	const skyssRequest = new XMLHttpRequest();
+	skyssRequest.onreadystatechange = function dataReady() {
+		if (this.readyState === 4 && this.status === 200) {
+			const data = JSON.parse(this.response);
+			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
+			document.querySelector('.time-table').innerHTML = `<table class="table table-striped">
+																	<thead>
+																		<tr><th>Start</th><th>Slutt</th></tr>
+																	</thead>
+
+																	<tbody>
+
+																		${data.map(d => `<tr><td>${d.start}</td><td>${d.end}</td></tr>`).join('')}
+																	</tbody>
+																	</table>`;
+		}
+	};
+	skyssRequest.open('POST', '/skyss', true);
+	skyssRequest.setRequestHeader('Content-type', 'application/json');
+	skyssRequest.send(JSON.stringify(params));
 }
 
 function buttonClicked(btn) {
@@ -52,19 +86,20 @@ function saveToLocalStorage(key, value) {
 
 
 function updateSoundButton(btn) {
+	const thisBtn = btn;
 	const statusIcon = document.createElement('i');
 	statusIcon.classList.add('fa');
 	if (silentTTS) {
 		statusIcon.classList.add('fa-volume-up', 'fa-green');
 		statusIcon.classList.remove('fa-volume-off', 'fa-red');
-		btn.innerHTML = 'Lyd på';
-		btn.appendChild(statusIcon);
+		thisBtn.innerHTML = 'Lyd på';
+		thisBtn.appendChild(statusIcon);
 		silentTTS = false;
 	} else {
 		statusIcon.classList.add('fa-volume-off', 'fa-red');
 		statusIcon.classList.remove('fa-volume-up', 'fa-green');
-		btn.innerHTML = 'Lyd av';
-		btn.appendChild(statusIcon);
+		thisBtn.innerHTML = 'Lyd av';
+		thisBtn.appendChild(statusIcon);
 		silentTTS = true;
 	}
 }
@@ -93,40 +128,6 @@ setInterval(() => {
 }, 1000);
 
 
-function SkyssTimeTableException(message) {
-	this.toString = function () {
-		return message;
-	};
-}
-
-
-function getSkyssTimeTable(params) {
-	if (!params || !params.from || !params.to) {
-		throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
-	}
-
-	const skyssRequest = new XMLHttpRequest();
-	skyssRequest.onreadystatechange = function () {
-		if (this.readyState === 4 && this.status === 200) {
-			const data = JSON.parse(this.response);
-			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
-			document.querySelector('.time-table').innerHTML = `<table class="table table-striped">
-																	<thead>
-																		<tr><th>Start</th><th>Slutt</th></tr>
-																	</thead>
-
-																	<tbody>
-
-																		${data.map(d => `<tr><td>${d.start}</td><td>${d.end}</td></tr>`).join('')}
-																	</tbody>
-																	</table>`;
-		}
-	};
-	skyssRequest.open('POST', '/skyss', true);
-	skyssRequest.setRequestHeader('Content-type', 'application/json');
-	skyssRequest.send(JSON.stringify(params));
-}
-
 function formatTimeOfDay(rainDate) {
 	const date = moment.tz(rainDate, moment.ISO_8601, 'Europe/Oslo');
 	return [date.hour() - 1, date.minute(), date.second()];
@@ -153,7 +154,6 @@ function drawWeatherChart(rainData) {
 
 
 		data.addRows(rainData);
-
 
 		const textOptions = {
 			color: 'white',
@@ -215,7 +215,7 @@ function itWontRain() {
 
 function fetchRainData() {
 	const xhr = new XMLHttpRequest();
-	xhr.addEventListener('load', function () {
+	xhr.addEventListener('load', function dataLoaded() {
 		const data = JSON.parse(this.responseText);
 		if (itWillRain(data)) {
 			const dataArray = formatRainData(data.product.time);
