@@ -5,7 +5,8 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
-  background: #d2492a; }
+  background: #d2492a;
+  color: white; }
 
 img {
   width: 100%; }
@@ -15,13 +16,33 @@ img {
 
 .clock {
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+  flex-direction: column; }
   .clock .clock-status {
     color: white;
     font-size: 1.5em; }
     @media screen and (max-width: 590px) {
       .clock .clock-status {
         font-size: 1em; } }
+  .clock > * {
+    margin: 0 auto; }
+
+.weather .stats {
+  margin: 20px 0px; }
+  .weather .stats ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center; }
+    .weather .stats ul li {
+      width: 25%;
+      font-size: 1.2em; }
+      @media screen and (max-width: 590px) {
+        .weather .stats ul li {
+          font-size: 0.8em; } }
+      .weather .stats ul li img {
+        width: 50%; }
 
 #weatherChart {
   width: 100%;
@@ -75,5 +96,8 @@ img {
 
 .destination {
   color: white; }
+
+table {
+  color: black; }
 
 /*# sourceMappingURL=style.css.map */

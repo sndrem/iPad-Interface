@@ -228,6 +228,24 @@ function fetchRainData() {
 		});
 }
 
-fetchRainData();
+function fetchForecast() {
+	fetch('/forecast')
+		.then((data) => data.json())
+		.then((data) => {
+			const nextWeather = data.weatherdata.forecast.tabular.time[0];
+			console.log(nextWeather);
+			document.querySelector('#forecast').innerHTML = data.weatherdata.forecast.text.location.time[0].body;
+			console.log(data);
+			
+			document.querySelector('#symbol').innerHTML = `<img src="../images/sym/b100/${nextWeather.symbol.var}.png">`;
+			document.querySelector('#temperature').innerHTML = `${nextWeather.temperature.value} &#8451;`;
+			document.querySelector('#precipitation').innerHTML = `${nextWeather.precipitation.value} mm nedbør`;
+			document.querySelector('#wind').innerHTML = `${nextWeather.windSpeed.mps} m/s - ${nextWeather.windSpeed.name.toLowerCase()} fra ${nextWeather.windDirection.name.toLowerCase()}`;
 
+			document.querySelector('#lastUpdated').innerHTML = `Sist oppdatert: ${data.weatherdata.meta.lastupdate}`;
+		});
+}
+
+fetchRainData();
+fetchForecast();
 // setInterval(fetchRainData, 5000);

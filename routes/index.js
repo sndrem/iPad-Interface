@@ -15,6 +15,10 @@ router.get("/rainData", yrService.getPrecication, function(req, res, next) {
     res.send(res.myData.weather);
 });
 
+router.get("/forecast", yrService.getWeatherForecast, function(req, res, next) {
+    res.send(res.forecast);
+});
+
 router.post("/skyss", function(req, res, next) {
     console.log(req.body);
     if (req.body.from && req.body.to && req.body.silent != undefined) {
