@@ -26,6 +26,9 @@ function getSkyssTimeTable(params) {
 	if (!params || !params.from || !params.to) {
 		throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
 	}
+
+	const timeTable = document.querySelector('.time-table');
+
 	fetch('/skyss', {
 		method: 'POST',
 		body: JSON.stringify(params),
@@ -36,7 +39,7 @@ function getSkyssTimeTable(params) {
 		.then((timeTableData) => {
 			const data = timeTableData;
 			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
-			document.querySelector('.time-table').innerHTML = `<table class="table table-striped">
+			timeTable.innerHTML = `<table class="table table-striped">
 																	<thead>
 																		<tr><th>Start</th><th>Slutt</th></tr>
 																	</thead>
@@ -46,8 +49,8 @@ function getSkyssTimeTable(params) {
 																		${data.map(d => `<tr><td>${d.start}</td><td>${d.end}</td></tr>`).join('')}
 																	</tbody>
 																	</table>`;
-		}).catch((error) => {
-			console.warn(error);
+		}).catch(() => {
+			timeTable.innerHTML = 'Kunne ikke hente neste avganger. Prøv igjen, eller vent en stund.';
 		});
 }
 
@@ -230,22 +233,17 @@ function fetchRainData() {
 
 function fetchForecast() {
 	fetch('/forecast')
-		.then((data) => data.json())
+		.then(data => data.json())
 		.then((data) => {
 			const nextWeather = data.weatherdata.forecast.tabular.time[0];
-			console.log(nextWeather);
 			document.querySelector('#forecast').innerHTML = data.weatherdata.forecast.text.location.time[0].body;
-			console.log(data);
-			
 			document.querySelector('#symbol').innerHTML = `<img src="../images/sym/b100/${nextWeather.symbol.var}.png">`;
 			document.querySelector('#temperature').innerHTML = `${nextWeather.temperature.value} &#8451;`;
 			document.querySelector('#precipitation').innerHTML = `${nextWeather.precipitation.value} mm nedbør`;
 			document.querySelector('#wind').innerHTML = `${nextWeather.windSpeed.mps} m/s - ${nextWeather.windSpeed.name.toLowerCase()} fra ${nextWeather.windDirection.name.toLowerCase()}`;
-
 			document.querySelector('#lastUpdated').innerHTML = `Sist oppdatert: ${data.weatherdata.meta.lastupdate}`;
 		});
 }
 
 fetchRainData();
 fetchForecast();
-// setInterval(fetchRainData, 5000);

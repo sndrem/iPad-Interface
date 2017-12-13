@@ -24,6 +24,7 @@ function getSkyssTimeTable(params) {
     throw new SkyssTimeTableException('The params object needs a field for from, to, and silent');
   }
 
+  var timeTable = document.querySelector('.time-table');
   fetch('/skyss', {
     method: 'POST',
     body: JSON.stringify(params),
@@ -35,11 +36,11 @@ function getSkyssTimeTable(params) {
   }).then(function (timeTableData) {
     var data = timeTableData;
     statusMessageElement.innerHTML = "Neste avganger<br>fra: <span class=\"destination\">".concat(params.from, "</span><br>til: <span class=\"destination\">").concat(params.to, "</span>");
-    document.querySelector('.time-table').innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
+    timeTable.innerHTML = "<table class=\"table table-striped\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<thead>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr><th>Start</th><th>Slutt</th></tr>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</thead>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tbody>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t".concat(data.map(function (d) {
       return "<tr><td>".concat(d.start, "</td><td>").concat(d.end, "</td></tr>");
     }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</table>");
-  }).catch(function (error) {
-    console.warn(error);
+  }).catch(function () {
+    timeTable.innerHTML = 'Kunne ikke hente neste avganger. Prøv igjen, eller vent en stund.';
   });
 }
 
@@ -221,9 +222,7 @@ function fetchForecast() {
     return data.json();
   }).then(function (data) {
     var nextWeather = data.weatherdata.forecast.tabular.time[0];
-    console.log(nextWeather);
     document.querySelector('#forecast').innerHTML = data.weatherdata.forecast.text.location.time[0].body;
-    console.log(data);
     document.querySelector('#symbol').innerHTML = "<img src=\"../images/sym/b100/".concat(nextWeather.symbol.var, ".png\">");
     document.querySelector('#temperature').innerHTML = "".concat(nextWeather.temperature.value, " &#8451;");
     document.querySelector('#precipitation').innerHTML = "".concat(nextWeather.precipitation.value, " mm nedb\xF8r");
@@ -233,4 +232,4 @@ function fetchForecast() {
 }
 
 fetchRainData();
-fetchForecast(); // setInterval(fetchRainData, 5000);
+fetchForecast();
