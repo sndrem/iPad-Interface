@@ -35,7 +35,8 @@ function getSkyssTimeTable(params) {
 		headers: new Headers({
 			'Content-Type': 'application/json'
 		})
-	}).then(data => data.json())
+	})
+		.then(data => data.json())
 		.then((timeTableData) => {
 			const data = timeTableData;
 			statusMessageElement.innerHTML = `Neste avganger<br>fra: <span class="destination">${params.from}</span><br>til: <span class="destination">${params.to}</span>`;
