@@ -158,7 +158,6 @@ function drawWeatherChart(rainData) {
 		data.addColumn('timeofday', 'Tid på dagen');
 		data.addColumn('number', 'MM/H');
 
-
 		data.addRows(rainData);
 
 		const textOptions = {
@@ -209,7 +208,7 @@ function drawWeatherChart(rainData) {
 }
 
 function itWillRain(data) {
-	return data.product.time.every(r => parseFloat(r.location.precipitation.value) !== 0.0);
+	return data.product.time.every(r => parseFloat(r.location.precipitation.value) < 0.0);
 }
 
 function itWontRain() {
@@ -223,7 +222,7 @@ function fetchRainData() {
 	fetch('/rainData')
 		.then(data => data.json())
 		.then((data) => {
-			if (itWillRain(data)) {
+			if (!itWillRain(data)) {
 				const dataArray = formatRainData(data.product.time);
 				drawWeatherChart(dataArray);
 			} else {

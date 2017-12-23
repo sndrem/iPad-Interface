@@ -194,7 +194,7 @@ function drawWeatherChart(rainData) {
 
 function itWillRain(data) {
   return data.product.time.every(function (r) {
-    return parseFloat(r.location.precipitation.value) !== 0.0;
+    return parseFloat(r.location.precipitation.value) < 0.0;
   });
 }
 
@@ -208,7 +208,7 @@ function fetchRainData() {
   fetch('/rainData').then(function (data) {
     return data.json();
   }).then(function (data) {
-    if (itWillRain(data)) {
+    if (!itWillRain(data)) {
       var dataArray = formatRainData(data.product.time);
       drawWeatherChart(dataArray);
     } else {

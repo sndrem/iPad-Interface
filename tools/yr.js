@@ -1,7 +1,7 @@
 const xml2json = require('xml2json');
 const request = require('request');
 
-const YR_BERGEN_VARSEL = 'http://api.met.no/weatherapi/nowcast/0.9/?lat=60.389444&lon=5.325659';
+const YR_BERGEN_VARSEL = 'http://api.met.no/weatherapi/nowcast/0.9/?lat=60.364205&lon=5.348935';
 const YR_BERGEN_LANGTIDS_VARSEL = 'http://www.yr.no/sted/Norge/Hordaland/Bergen/Bergen/varsel.xml';
 
 const yr = {
